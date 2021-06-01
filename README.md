@@ -1,6 +1,6 @@
 ### My Local Setup
-- Set terminal default theme to `Ayu Mirage`, change cursor color && blink cursor
 - All themes are in `/themes` to import into terminal, just double click
+- Set terminal default theme to `Ayu Mirage`, change cursor color && blink cursor
 
 ### Install / Uninstall
 - install: `rake`
@@ -11,5 +11,18 @@
 - Macos Terminal Themes: https://github.com/lysyi3m/macos-terminal-themes
 
 
-TODO:
-copy over all the [vim/, vimrc, vimrv.bundles, etc... ]
+TODO: Add the other necessary things to the rake install:
+```
+xcode-select --install
+brew tap homebrew/services
+brew install node
+brew install yarn
+brew install redis
+  brew services start redis
+brew install mysql
+  brew services start mysql
+brew install postgresql
+  brew services start postgresql
+brew install elasticsearch
+  brew services start elasticsearch
+```
