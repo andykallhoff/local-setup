@@ -6,6 +6,16 @@
 - install: `rake`
 - uninstall: `rake uninstall`
 
+### Manual Process
+- install xcode
+- install rvm
+- install homebrew
+- install prompt beautifier (starship)
+- brew services
+  - redis / mysql / postgresql / elasticsearch / node / yarn
+- import terminal theme
+- setup .zshrc aliases
+
 ### Credits
 - Maximum Awesome: https://github.com/square/maximum-awesome
 - Macos Terminal Themes: https://github.com/lysyi3m/macos-terminal-themes
@@ -14,6 +24,11 @@
 TODO: Add the other necessary things to the rake install:
 ```
 xcode-select --install
+\curl -sSL https://get.rvm.io | bash
+  # https://rvm.io/rvm/install
+brew install starship
+  eval "$(starship init zsh)" #~/.zshrc it should already be in there
+  # https://starship.rs/guide/#%F0%9F%9A%80-installation
 brew tap homebrew/services
 brew install node
 brew install yarn
