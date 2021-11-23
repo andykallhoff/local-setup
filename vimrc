@@ -78,6 +78,11 @@ nnoremap <leader><space> :call whitespace#strip_trailing()<CR>
 nnoremap <leader>g :GitGutterToggle<CR>
 noremap <silent> <leader>V :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
 
+" Commenting
+" ,cc for commenting lines
+" ,cu for un-commenting lines
+map <leader>cc <plug>NERDCommenterToggle
+
 " this adds an erb command for puts-ing
 " command Puts :normal <CR>i <p><%=  %></p><CR><ESC>bbbh
 " imap puts <CR><p><%=  %></p><CR><ESC>bbbh
@@ -145,3 +150,6 @@ endif
 " :hi Visual term=reverse cterm=reverse ctermbg=white ctermfg=grey
 " highlight Visual term=reverse cterm=reverse ctermbg=white ctermfg=grey
 highlight Visual cterm=none ctermbg=darkgrey ctermfg=cyan
+highlight Spellbad cterm=none ctermbg=darkgrey ctermfg=cyan
+
+let g:snipMate = { 'snippet_version' : 1 }

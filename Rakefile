@@ -118,7 +118,38 @@ def unlink_file(original_filename, symlink_filename)
   end
 end
 
+def filemap(map)
+  map.inject({}) do |result, (key, value)|
+    result[File.expand_path(key)] = File.expand_path(value)
+    result
+  end.freeze
+end
+
+COPIED_FILES = filemap(
+  'vimrc.local'         => '~/.vimrc.local',
+  'vimrc.bundles.local' => '~/.vimrc.bundles.local',
+  'tmux.conf.local'     => '~/.tmux.conf.local'
+)
+
+LINKED_FILES = filemap(
+  'vim'           => '~/.vim',
+  'tmux.conf'     => '~/.tmux.conf',
+  'vimrc'         => '~/.vimrc',
+  'vimrc.bundles' => '~/.vimrc.bundles'
+)
+
+# Portions of the installation are order dependent!
+# 1) RVM
+# 2) Homebrew
+# 3) Vim
+# At this point the others are no longer order dependent
 namespace :install do
+  desc 'Install RVM'
+  task :rvm do
+    step 'RVM'
+    sh '\curl -sSL https://get.rvm.io | bash && source /Users/andykallhoff/.rvm/scripts/rvm'
+  end
+
   desc 'Update or Install Brew'
   task :brew do
     step 'Homebrew'
@@ -127,19 +158,17 @@ namespace :install do
     end
   end
 
+  desc 'Install Vim'
+  task :vim do
+    step 'vim'
+    brew_install 'vim'
+  end
+
   desc 'Install The Silver Searcher'
   task :the_silver_searcher do
     step 'the_silver_searcher'
     brew_install 'the_silver_searcher'
   end
-
-  #desc 'Install iTerm'
-  #task :iterm do
-  #  step 'iterm2'
-  #  unless app? 'iTerm'
-  #    brew_cask_install 'iterm2'
-  #  end
-  #end
 
   desc 'Install ctags'
   task :ctags do
@@ -158,6 +187,74 @@ namespace :install do
     step 'tmux'
     # tmux copy-pipe function needs tmux >= 1.8
     brew_install 'tmux', :requires => '>= 2.1'
+  end
+
+  desc 'Install Starship'
+  task :starship do
+    step 'starship'
+    # https://starship.rs/guide/#%F0%9F%9A%80-installation
+    brew_install 'starship'
+    sh 'eval "$(starship init zsh)"'
+  end
+
+  desc 'Install Homebrew Services'
+  task :homebrew_services do
+    step 'homebrew_services'
+    sh 'brew tap homebrew/services'
+  end
+
+  desc 'Install Node'
+  task :node do
+    step 'node'
+    brew_install 'node'
+  end
+
+  desc 'Install Yarn'
+  task :yarn do
+    step 'yarn'
+    brew_install 'yarn'
+  end
+
+  desc 'Install Redis'
+  task :redis do
+    step 'redis'
+    brew_install 'redis'
+    sh 'brew services start redis'
+  end
+
+  desc 'Install Postgresql'
+  task :postgresql do
+    step 'postgresql'
+    brew_install 'postgresql'
+    sh 'brew services start postgresql'
+  end
+
+  desc 'Install Mysql'
+  task :mysql do
+    step 'mysql'
+    brew_install 'mysql'
+    sh 'brew services start mysql'
+  end
+
+  desc 'Install Elasticsearch'
+  task :elasticsearch do
+    step 'elasticsearch'
+    brew_install 'elasticsearch'
+    sh 'brew services start elasticsearch'
+  end
+
+  desc 'Setup .zshrc'
+  task :setup_zshrc do
+    step 'setup_zshrc'
+    sh 'echo >> ~/.zshrc'
+    sh 'echo "alias rs=\"rails s\"" >> ~/.zshrc'
+    sh 'echo "alias rc=\"rails c\"" >> ~/.zshrc'
+    sh 'echo "alias sd=\"sidekiq -C config/sidekiq-default.yml\"" >> ~/.zshrc'
+    sh 'echo "alias rcdb=\"bundle exec rails db:drop db:create && bundle exec rails db:migrate && bundle exec rails db:seed\"" >> ~/.zshrc'
+    sh 'echo "alias rt=\"RAILS_ENV=test bundle exec rake test\"" >> ~/.zshrc'
+    sh 'echo "alias st=\"RAILS_ENV=test bundle exec ruby -Itest\"" >> ~/.zshrc'
+    sh 'echo >> ~/.zshrc'
+    sh 'echo "eval \"$(starship init zsh)\"" >> ~/.zshrc'
   end
 
   #desc 'Install MacVim'
@@ -193,38 +290,30 @@ namespace :install do
   task :vundle do
     step 'vundle'
     install_github_bundle 'VundleVim','Vundle.vim'
-    sh '~/bin/vim -c "PluginInstall!" -c "q" -c "q"'
+    sh '/usr/local/bin/vim -c "PluginInstall!" -c "q" -c "q"'
+    #This is the macvim version
+    #sh '~/bin/vim -c "PluginInstall!" -c "q" -c "q"'
   end
 end
 
-def filemap(map)
-  map.inject({}) do |result, (key, value)|
-    result[File.expand_path(key)] = File.expand_path(value)
-    result
-  end.freeze
-end
-
-COPIED_FILES = filemap(
-  'vimrc.local'         => '~/.vimrc.local',
-  'vimrc.bundles.local' => '~/.vimrc.bundles.local',
-  'tmux.conf.local'     => '~/.tmux.conf.local'
-)
-
-LINKED_FILES = filemap(
-  'vim'           => '~/.vim',
-  'tmux.conf'     => '~/.tmux.conf',
-  'vimrc'         => '~/.vimrc',
-  'vimrc.bundles' => '~/.vimrc.bundles'
-)
-
 desc 'Install these config files.'
 task :install do
+  Rake::Task['install:rvm'].invoke
   Rake::Task['install:brew'].invoke
+  Rake::Task['install:vim'].invoke
   Rake::Task['install:the_silver_searcher'].invoke
-  #Rake::Task['install:iterm'].invoke
   Rake::Task['install:ctags'].invoke
   Rake::Task['install:reattach_to_user_namespace'].invoke
   Rake::Task['install:tmux'].invoke
+  Rake::Task['install:starship'].invoke
+  Rake::Task['install:homebrew_services'].invoke
+  Rake::Task['install:node'].invoke
+  Rake::Task['install:yarn'].invoke
+  Rake::Task['install:redis'].invoke
+  Rake::Task['install:postgresql'].invoke
+  Rake::Task['install:mysql'].invoke
+  Rake::Task['install:elasticsearch'].invoke
+  Rake::Task['install:setup_zshrc'].invoke
   #Rake::Task['install:macvim'].invoke
 
   # TODO install gem ctags?
@@ -243,22 +332,6 @@ task :install do
   # Install Vundle and bundles
   Rake::Task['install:vundle'].invoke
 
-  #step 'iterm2 colorschemes'
-  #colorschemes = `defaults read com.googlecode.iterm2 'Custom Color Presets'`
-  #dark  = colorschemes !~ /Solarized Dark/
-  #light = colorschemes !~ /Solarized Light/
-  #sh('open', '-a', '/Applications/iTerm.app', File.expand_path('iterm2-colors-solarized/Solarized Dark.itermcolors')) if dark
-  #sh('open', '-a', '/Applications/iTerm.app', File.expand_path('iterm2-colors-solarized/Solarized Light.itermcolors')) if light
-
-  #step 'iterm2 profiles'
-  #puts
-  #puts "  Your turn!"
-  #puts
-  #puts "  Go and manually set up Solarized Light and Dark profiles in iTerm2."
-  #puts "  (You can do this in 'Preferences' -> 'Profiles' by adding a new profile,"
-  #puts "  then clicking the 'Colors' tab, 'Load Presets...' and choosing a Solarized option.)"
-  #puts "  Also be sure to set Terminal Type to 'xterm-256color' in the 'Terminal' tab."
-  #puts
   puts "  Enjoy!"
   puts
 end
@@ -280,12 +353,6 @@ task :uninstall do
   step 'homebrew'
   puts
   puts 'Manually uninstall homebrew if you wish: https://gist.github.com/mxcl/1173223.'
-
-  #step 'iterm2'
-  #puts
-  #puts 'Run this to uninstall iTerm:'
-  #puts
-  #puts '  rm -rf /Applications/iTerm.app'
 
   #step 'macvim'
   #puts
