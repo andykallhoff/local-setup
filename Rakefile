@@ -142,6 +142,7 @@ LINKED_FILES = filemap(
 # 1) RVM
 # 2) Homebrew
 # 3) Vim
+# 4) Setup zshrc
 # At this point the others are no longer order dependent
 namespace :install do
   desc 'Install RVM'
@@ -156,8 +157,10 @@ namespace :install do
     unless system('which brew > /dev/null || ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"')
       raise "Homebrew must be installed before continuing."
     end
+    return if File.exist?(brew_complete)
     sh 'echo \'eval "$(/opt/homebrew/bin/brew shellenv)"\' >> /Users/andykallhoff/.zprofile'
     sh 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+    sh 'touch brew_complete'
   end
 
   desc 'Install Vim'
@@ -169,6 +172,7 @@ namespace :install do
   desc 'Setup .zshrc'
   task :setup_zshrc do
     step 'setup_zshrc'
+    return if File.exist?(zshrc_complete)
     sh 'echo >> ~/.zshrc'
     sh 'echo "alias rs=\"rails s\"" >> ~/.zshrc'
     sh 'echo "alias rc=\"rails c\"" >> ~/.zshrc'
@@ -181,6 +185,7 @@ namespace :install do
     sh 'echo "# usages: st path/to/file --name name_of_test" >> ~/.zshrc'
     sh 'echo "alias st=\"RAILS_ENV=test bundle exec ruby -Itest\"" >> ~/.zshrc'
     sh 'echo >> ~/.zshrc'
+    sh 'touch zshrc_complete'
   end
   
   desc 'Install The Silver Searcher'
@@ -213,7 +218,9 @@ namespace :install do
     step 'starship'
     # https://starship.rs/guide/#%F0%9F%9A%80-installation
     brew_install 'starship'
+    return if File.exist?(starship_complete)
     sh 'echo "eval \"$(starship init zsh)\"" >> ~/.zshrc'
+    sh 'touch starship_complete'
   end
 
   desc 'Install Homebrew Services'
