@@ -156,6 +156,8 @@ namespace :install do
     unless system('which brew > /dev/null || ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"')
       raise "Homebrew must be installed before continuing."
     end
+    sh 'echo \'eval "$(/opt/homebrew/bin/brew shellenv)"\' >> /Users/andykallhoff/.zprofile'
+    sh 'eval "$(/opt/homebrew/bin/brew shellenv)"'
   end
 
   desc 'Install Vim'
@@ -163,7 +165,24 @@ namespace :install do
     step 'vim'
     brew_install 'vim'
   end
-
+  
+  desc 'Setup .zshrc'
+  task :setup_zshrc do
+    step 'setup_zshrc'
+    sh 'echo >> ~/.zshrc'
+    sh 'echo "alias rs=\"rails s\"" >> ~/.zshrc'
+    sh 'echo "alias rc=\"rails c\"" >> ~/.zshrc'
+    sh 'echo "alias sd=\"sidekiq -C config/sidekiq-default.yml\"" >> ~/.zshrc'
+    sh 'echo "alias rcdb=\"bundle exec rails db:drop db:create && bundle exec rails db:migrate && bundle exec rails db:seed\"" >> ~/.zshrc'
+    sh 'echo "alias rt=\"RAILS_ENV=test bundle exec rake test\"" >> ~/.zshrc'
+    sh 'echo "# st = Specific Test" >> ~/.zshrc'
+    sh 'echo "# usages: RAILS_ENV=test bundle exec ruby -Itest path/to/file" >> ~/.zshrc'
+    sh 'echo "# usages: RAILS_ENV=test bundle exec ruby -Itest path/to/file --name name_of_test" >> ~/.zshrc'
+    sh 'echo "# usages: st path/to/file --name name_of_test" >> ~/.zshrc'
+    sh 'echo "alias st=\"RAILS_ENV=test bundle exec ruby -Itest\"" >> ~/.zshrc'
+    sh 'echo >> ~/.zshrc'
+  end
+  
   desc 'Install The Silver Searcher'
   task :the_silver_searcher do
     step 'the_silver_searcher'
@@ -182,19 +201,19 @@ namespace :install do
     brew_install 'reattach-to-user-namespace'
   end
 
-  desc 'Install tmux'
-  task :tmux do
-    step 'tmux'
-    # tmux copy-pipe function needs tmux >= 1.8
-    brew_install 'tmux', :requires => '>= 2.1'
-  end
+  #desc 'Install tmux'
+  #task :tmux do
+  #  step 'tmux'
+  #  # tmux copy-pipe function needs tmux >= 1.8
+  #  brew_install 'tmux', :requires => '>= 2.1'
+  #end
 
   desc 'Install Starship'
   task :starship do
     step 'starship'
     # https://starship.rs/guide/#%F0%9F%9A%80-installation
     brew_install 'starship'
-    sh 'eval "$(starship init zsh)"'
+    sh 'echo "eval \"$(starship init zsh)\"" >> ~/.zshrc'
   end
 
   desc 'Install Homebrew Services'
@@ -239,22 +258,9 @@ namespace :install do
   desc 'Install Elasticsearch'
   task :elasticsearch do
     step 'elasticsearch'
-    brew_install 'elasticsearch'
+    sh 'brew tap elastic/tap'
+    brew_install 'elastic/tap/elasticsearch-full'
     sh 'brew services start elasticsearch'
-  end
-
-  desc 'Setup .zshrc'
-  task :setup_zshrc do
-    step 'setup_zshrc'
-    sh 'echo >> ~/.zshrc'
-    sh 'echo "alias rs=\"rails s\"" >> ~/.zshrc'
-    sh 'echo "alias rc=\"rails c\"" >> ~/.zshrc'
-    sh 'echo "alias sd=\"sidekiq -C config/sidekiq-default.yml\"" >> ~/.zshrc'
-    sh 'echo "alias rcdb=\"bundle exec rails db:drop db:create && bundle exec rails db:migrate && bundle exec rails db:seed\"" >> ~/.zshrc'
-    sh 'echo "alias rt=\"RAILS_ENV=test bundle exec rake test\"" >> ~/.zshrc'
-    sh 'echo "alias st=\"RAILS_ENV=test bundle exec ruby -Itest\"" >> ~/.zshrc'
-    sh 'echo >> ~/.zshrc'
-    sh 'echo "eval \"$(starship init zsh)\"" >> ~/.zshrc'
   end
 
   #desc 'Install MacVim'
@@ -301,10 +307,11 @@ task :install do
   Rake::Task['install:rvm'].invoke
   Rake::Task['install:brew'].invoke
   Rake::Task['install:vim'].invoke
+  Rake::Task['install:setup_zshrc'].invoke
   Rake::Task['install:the_silver_searcher'].invoke
   Rake::Task['install:ctags'].invoke
   Rake::Task['install:reattach_to_user_namespace'].invoke
-  Rake::Task['install:tmux'].invoke
+  #Rake::Task['install:tmux'].invoke
   Rake::Task['install:starship'].invoke
   Rake::Task['install:homebrew_services'].invoke
   Rake::Task['install:node'].invoke
@@ -313,7 +320,6 @@ task :install do
   Rake::Task['install:postgresql'].invoke
   Rake::Task['install:mysql'].invoke
   Rake::Task['install:elasticsearch'].invoke
-  Rake::Task['install:setup_zshrc'].invoke
   #Rake::Task['install:macvim'].invoke
 
   # TODO install gem ctags?
