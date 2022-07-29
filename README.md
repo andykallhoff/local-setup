@@ -21,15 +21,16 @@
 ```
 ssh-keygen -t ed25519 -C "andykallhoff@gmail.com"
 eval "$(ssh-agent -s)"
-vi ~/.ssh/config
-  Host *
-    AddKeysToAgent yes
-    IdentityFile ~/.ssh/id_ed25519
 ssh-add ~/.ssh/id_ed25519
 pbcopy < ~/.ssh/id_ed25519.pub
 # on github, add new ssh, paste into the key
 ```
 - set your global gitconfig: `vi ~/.gitconfig`
+```
+[user]
+	name = Andy Kallhoff
+	email = andykallhoff@gmail.com
+```
 - make your code directory and cd into it: `mkdir code && cd code/`
 - clone this repo: `git clone git@github.com:andykallhoff/local-setup.git`
 - install: `rake`
