@@ -14,8 +14,8 @@
     - blink cursor
 
 ### Install
-- install xcode command line tools: `xcode-select --install`
-- generate and add ssh key to github:
+1) install xcode command line tools: `xcode-select --install`
+2) generate and add ssh key to github:
   - https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key
   - https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
 ```
@@ -25,15 +25,15 @@ ssh-add ~/.ssh/id_ed25519
 pbcopy < ~/.ssh/id_ed25519.pub
 # on github, add new ssh, paste into the key
 ```
-- set your global gitconfig: `vi ~/.gitconfig`
+3) set your global gitconfig: `vi ~/.gitconfig`
 ```
 [user]
 	name = Andy Kallhoff
 	email = andykallhoff@gmail.com
 ```
-- make your code directory and cd into it: `mkdir code && cd code/`
-- clone this repo: `git clone git@github.com:andykallhoff/local-setup.git`
-- install: `rake`
+4) make your code directory and cd into it: `mkdir code && cd code/`
+5) clone this repo: `git clone git@github.com:andykallhoff/local-setup.git`
+6) install: `rake`
 
 
 ### Uninstall
@@ -43,6 +43,8 @@ pbcopy < ~/.ssh/id_ed25519.pub
 ### Credits
 - Maximum Awesome: https://github.com/square/maximum-awesome
 - Macos Terminal Themes: https://github.com/lysyi3m/macos-terminal-themes
+
+---------------------------------------------------------------------------
 
 **Notes when resetting entire machine**
 ```
