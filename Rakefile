@@ -267,7 +267,7 @@ namespace :install do
     step 'elasticsearch'
     sh 'brew tap elastic/tap'
     brew_install 'elastic/tap/elasticsearch-full'
-    sh 'brew services start elasticsearch'
+    sh 'brew services start elastic/tap/elasticsearch-full'
   end
 
   #desc 'Install MacVim'
