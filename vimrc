@@ -145,6 +145,11 @@ if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
 
+" sometimes the terminal and vim themes get disconnected or changed
+" because we want to use starship as our theme for both
+" ensure the colorscheme is set to default
+colorscheme default
+
 " set vim visual highlighting to be diff colors
 " :hi Visual cterm=none ctermbg=darkgrey ctermfg=cyan
 " :hi Visual term=reverse cterm=reverse ctermbg=white ctermfg=grey
