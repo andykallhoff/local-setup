@@ -1,18 +1,3 @@
-### My Local Setup
-- All themes are in `/themes` to import into terminal, just double click
-- Double click `Ayu Mirage`, then go to terminal preferences
-  - set as default theme
-  - change background colors:
-    - (change tab to RGB Sliders) `R49 G57 B75`, or `Hex: 31394B`
-    - opacity 93%
-    - blur 50%
-  - change text selection colors:
-    - (change tab to RGB Sliders) `R110 G117 B130`, or `Hex: 6E7582`
-    - opacity 84%
-  - change cursor:
-    - `Hex: FF9500`
-    - blink cursor
-
 ### Install
 1) install xcode command line tools: `xcode-select --install`
 2) generate and add ssh key to github:
@@ -44,6 +29,23 @@ pbcopy < ~/.ssh/id_ed25519.pub
 - Maximum Awesome: https://github.com/square/maximum-awesome
 - Macos Terminal Themes: https://github.com/lysyi3m/macos-terminal-themes
 
+---------------------------------------------------------------------------
+
+### My Local Theme
+- All themes are in `/themes` to import into terminal, just double click
+- Double click `Ayu Mirage`, then go to terminal preferences
+  - set as default theme
+  - change background colors:
+    - (change tab to RGB Sliders) `R49 G57 B75`, or `Hex: 31394B`
+    - opacity 93%
+    - blur 50%
+  - change text selection colors:
+    - (change tab to RGB Sliders) `R110 G117 B130`, or `Hex: 6E7582`
+    - opacity 84%
+  - change cursor:
+    - `Hex: FF9500`
+    - blink cursor
+    
 ---------------------------------------------------------------------------
 
 **Notes when resetting entire machine**
