@@ -303,7 +303,10 @@ namespace :install do
   task :vundle do
     step 'vundle'
     install_github_bundle 'VundleVim','Vundle.vim'
-    sh '/usr/local/bin/vim -c "PluginInstall!" -c "q" -c "q"'
+    sh 'vim +PluginInstall +qall'
+    #Old way is below, in order to install all plugins from commandline, use the above
+    #sh '/usr/local/bin/vim -c "PluginInstall!" -c "q" -c "q"'
+    
     #This is the macvim version
     #sh '~/bin/vim -c "PluginInstall!" -c "q" -c "q"'
   end
