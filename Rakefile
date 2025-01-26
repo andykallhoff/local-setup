@@ -149,6 +149,10 @@ namespace :install do
   task :rvm do
     step 'RVM'
     sh '\curl -sSL https://get.rvm.io | bash && source /Users/andykallhoff/.rvm/scripts/rvm'
+
+    # there is an issue installing ruby so use the below to install the latest ruby with the Mac M1 chip
+    # rvm install ruby-3.4.1 --with-openssl-dir=$(brew --prefix openssl) --with-readline-dir=$(brew --prefix readline) --with-libyaml-dir=$(brew --prefix libyaml) --disable-dtrace --disable-docs
+    # source: https://github.com/rvm/rvm/issues/5365#issuecomment-1947149671
   end
 
   desc 'Update or Install Brew'
